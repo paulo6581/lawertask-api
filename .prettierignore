@@ -1,0 +1,12 @@
+# Ignorar arquivos TypeScript para evitar formatação automática
+*.ts
+*.tsx
+
+# Ignorar arquivos de build
+dist/
+build/
+node_modules/
+
+# Ignorar arquivos de configuração
+*.config.js
+*.config.ts
