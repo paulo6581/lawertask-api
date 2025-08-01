@@ -7,7 +7,7 @@ export class RegisterDto {
     description: 'Nome completo do usuário',
   })
 
-  // Validação nome registro
+  // nome registro
   @IsString({ message: 'Nome deve ser uma string' })
   @IsNotEmpty({ message: 'Nome é obrigatório' })
   name: string;
@@ -17,7 +17,7 @@ export class RegisterDto {
     description: 'Email do usuário',
   })
 
-  // Validação email registro
+  // email registro
   @IsEmail({}, { message: 'Email deve ter um formato válido' })
   @IsNotEmpty({ message: 'Email é obrigatório' })
   email: string;
@@ -28,7 +28,7 @@ export class RegisterDto {
     minLength: 6,
   })
 
-  // Validação senha registro
+  // senha registro
   @IsString({ message: 'Senha deve ser uma string' })
   @IsNotEmpty({ message: 'Senha é obrigatória' })
   @MinLength(6, { message: 'Senha deve ter pelo menos 6 caracteres' })
