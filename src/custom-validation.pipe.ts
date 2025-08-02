@@ -8,7 +8,7 @@ export class CustomValidationPipe implements PipeTransform<any> {
 
   //Método principal que transforma e valida os dados de entrada
   async transform(value: any, { metatype }: ArgumentMetadata) {
-    // Verifica se existe um metatype e se deve ser validado
+    // Verifica se existe um metatype a ser validado
     if (!metatype || !this.toValidate(metatype)) {
       return value;
     }
@@ -26,7 +26,6 @@ export class CustomValidationPipe implements PipeTransform<any> {
       });
     }
     
-    // Se passou na validação, retorna o objeto transformado
     return object;
   }
 

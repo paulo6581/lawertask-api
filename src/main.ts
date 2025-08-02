@@ -29,7 +29,7 @@ async function bootstrap() {
 
     const port = process.env.PORT || 3000;
     await app.listen(port);
-    console.log(`Aplicação rodando: http://localhost:${port}`);
+    console.log(`Aplicação rodando: http://localhost:${port}/api/docs`);
   } catch (error) {
     console.error(`Erro ao inicializar a aplicação: ${error}`);
   }
