@@ -1,53 +1,184 @@
 # Changelog
 
-## [Unreleased]
+Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
-### Added
-- Sistema de gerenciamento de tarefas para escritórios de advocacia
-- Configuração inicial do projeto NestJS
-- Estrutura básica da aplicação
+O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
+e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
-## [0.0.1] - 2025-07-29
+## [1.0.0] - 2025-08-02
 
-### Added
+### **Release Inicial - Sistema Completo**
 
-#### 🏗️ **Configuração do Projeto**
-- Inicialização do projeto NestJS com TypeScript
-- Configuração do ESLint para padronização de código
-- Configuração do Prettier para formatação automática
-- Setup do Jest para testes unitários e e2e
-- Configuração do SWC para compilação mais rápida
+Esta é a primeira versão funcional completa do LawerTask API, com todos os módulos principais implementados e funcionais.
 
-#### 📦 **Dependências Principais**
-- **Framework**: NestJS v11.1.5
-- **Linguagem**: TypeScript
-- **ORM**: Prisma v6.13.0 com PostgreSQL
-- **Autenticação**: JWT + Passport (local e JWT strategies)
-- **Validação**: class-validator + class-transformer
-- **Documentação**: Swagger/OpenAPI
-- **Segurança**: bcryptjs para hash de senhas
+###  **Adicionado**
 
-#### 🗄️ **Modelagem do Banco de Dados**
-- **Schema Prisma** criado com 3 entidades principais:
-  - `User`: Usuários do sistema
-    - id, email, name, password
-    - Timestamps automáticos (createdAt, updatedAt)
-    - Relacionamento 1:N com Task
-  - `Client`: Clientes do escritório
-    - id, name, email, phone, company
-    - Timestamps automáticos
-    - Relacionamento 1:N com Task
-  - `Task`: Tarefas/processos
-    - id, title, description, status, priority, dueDate
-    - Relacionamentos com User e Client
-    - Enums para status (TODO, DOING, DONE) e prioridade (LOW, MEDIUM, HIGH)
+#### 🔐 **Sistema de Autenticação**
+- **AuthModule** completo com JWT
+  - Registro de usuários (`POST /api/auth/register`)
+  - Login de usuários (`POST /api/auth/login`)
+  - Hash seguro de senhas com bcryptjs
+  - Geração e validação de tokens JWT
+  - Tratamento de erros de autenticação
+- **DTOs de validação**:
+  - `RegisterDto` - validação de registro
+  - `LoginDto` - validação de login
+- **Guards e Strategies**:
+  - `JwtAuthGuard` - proteção de rotas
+  - `JwtStrategy` - validação de tokens
+- **Configuração JWT** com variáveis de ambiente
+
+#### 👥 **Gerenciamento de Clientes**
+- **ClientsModule** com CRUD completo
+  - Criar cliente (`POST /api/clients`)
+  - Listar todos os clientes (`GET /api/clients`)
+  - Buscar cliente por ID (`GET /api/clients/:id`)
+  - Atualizar cliente (`PATCH /api/clients/:id`)
+- **DTOs específicos**:
+  - `CreateClientDto` - criação de clientes
+  - `UpdateClientDto` - atualização de clientes
+- **Validações**:
+  - Email único por cliente
+  - Campos obrigatórios e opcionais
+  - Tratamento de conflitos
+
+#### ✅ **Sistema de Tarefas**
+- **TasksModule** com funcionalidades avançadas
+  - Criar tarefa (`POST /api/tasks`)
+  - Listar tarefas do usuário (`GET /api/tasks`)
+  - Buscar tarefa específica (`GET /api/tasks/:id`)
+  - Atualizar tarefa (`PATCH /api/tasks/:id`)
+  - Excluir tarefa (`DELETE /api/tasks/:id`)
+  - **Dashboard de estatísticas** (`GET /api/tasks/stats`)
+- **DTOs robustos**:
+  - `CreateTaskDto` - criação com validações complexas
+  - `UpdateTaskDto` - atualização parcial
+- **Funcionalidades especiais**:
+  - Relacionamento Task-Client-User
+  - Filtros por usuário autenticado
+  - Enums para Status (TODO, DOING, DONE)
+  - Enums para Prioridade (LOW, MEDIUM, HIGH)
+  - Validação de datas
+  - Estatísticas agregadas por status
+
+#### �️ **Sistema de Banco de Dados**
+- **DatabaseModule** global com Prisma
+- **PrismaService** com:
+  - Conexão automática na inicialização
+  - Desconexão limpa no encerramento
+  - Logs de conexão/desconexão
+  - Tratamento de erros de conexão
+- **Schema completo**:
+  - Modelo `User` com relacionamentos
+  - Modelo `Client` com validações
+  - Modelo `Task` com enums e relacionamentos
+  - Índices únicos para performance
+  - Timestamps automáticos
+
+#### 📚 **Documentação e Validação**
+- **Swagger/OpenAPI** completo:
+  - Documentação automática de todos os endpoints
+  - Exemplos de request/response
+  - Autenticação Bearer Token
+  - Agrupamento por tags (Auth, Clients, Tasks)
+  - Descrições detalhadas das operações
+- **Sistema de validação robusto**:
+  - `CustomValidationPipe` personalizado
+  - Validações com class-validator
+  - Transformações com class-transformer
+  - Mensagens de erro estruturadas
 
 #### 🚀 **Configuração da Aplicação**
-- **main.ts** configurado com:
-  - CORS habilitado para requisições cross-origin
-  - Prefixo global `/api` para todas as rotas
-  - ValidationPipe global com:
-    - `transform: true` - transformação automática de tipos
+- **main.ts** otimizado com:
+  - CORS habilitado para desenvolvimento
+  - Prefixo global `/api`
+  - ValidationPipe global customizado
+  - Swagger em `/api/docs`
+  - Tratamento de erros de inicialização
+  - Logs informativos
+- **Configuração de ambiente**:
+  - ConfigModule global
+  - Variáveis de ambiente tipadas
+  - Configuração JWT dinamica
+
+#### 🌱 **Dados de Desenvolvimento**
+- **Seed script** (`prisma/seed.ts`):
+  - Usuário administrador padrão
+  - Clientes de exemplo
+  - Tarefas de exemplo
+  - Dados realistas para testes
+- **Migração inicial** completa:
+  - Todas as tabelas e relacionamentos
+  - Índices de performance
+  - Constraints de integridade
+
+#### 🧪 **Testes**
+- **Configuração Jest** completa
+- **Testes unitários** para TasksService
+- **Mocks** do PrismaService
+- **Configuração de cobertura**
+- Scripts de teste configurados
+
+### 🛠️ **Alterado**
+
+#### 📦 **Dependências Atualizadas**
+- NestJS atualizado para v11.1.5
+- Prisma atualizado para v6.13.0
+- TypeScript para v5.8.3
+- Todas as dependências de desenvolvimento atualizadas
+
+#### ⚙️ **Configurações Melhoradas**
+- ESLint configurado com regras TypeScript
+- Prettier configurado para formatação consistente
+- tsconfig otimizado para desenvolvimento
+- Scripts npm organizados e documentados
+
+### 🔧 **Corrigido**
+
+#### 🐛 **Problemas Resolvidos**
+- Validação de DTOs funcionando corretamente
+- Relacionamentos Prisma configurados adequadamente
+- Autenticação JWT funcionando em todas as rotas protegidas
+- Tratamento adequado de erros de validação
+- Logs de aplicação estruturados
+
+---
+
+## [0.1.0] - 2025-07-31
+
+### 🏗️ **Configuração Inicial**
+
+#### **Adicionado**
+- Inicialização do projeto NestJS com TypeScript
+- Configuração do ESLint e Prettier
+- Setup do Jest para testes
+- Configuração do Prisma ORM
+- Schema inicial do banco de dados
+- Migração inicial do PostgreSQL
+- Configuração de variáveis de ambiente
+- Estrutura básica de módulos
+
+#### **Dependências Principais Instaladas**
+- @nestjs/core v11.1.5
+- @prisma/client v6.13.0
+- @nestjs/jwt v11.0.0
+- @nestjs/passport v11.0.5
+- @nestjs/swagger v11.2.0
+- bcryptjs v3.0.2
+- class-validator v0.14.2
+
+#### **Arquivos de Configuração**
+- nest-cli.json
+- tsconfig.json / tsconfig.build.json
+- eslint.config.mjs
+- .prettierrc / .prettierignore
+- .gitignore
+
+---
+
+**Desenvolvido por Paulo Roberto**  
+**Data de Conclusão**: 2 de agosto de 2025  
+**Stack**: NestJS + TypeScript + Prisma + PostgreSQL + JWT + Swagger
     - `whitelist: true` - remoção de propriedades não definidas
     - `forbidNonWhitelisted: true` - erro para propriedades não permitidas
   - Documentação Swagger em `/api/docs`
@@ -85,21 +216,6 @@
 - Hash de senhas com bcryptjs
 - Validação de dados de entrada
 - CORS configurado para segurança
-
-#### 📊 **Performance**
-- SWC para compilação otimizada
-- Prisma ORM para queries eficientes
-- TypeScript para type safety
-
-### Next Steps
-- [ ] Implementar controllers para User, Client e Task
-- [ ] Criar DTOs para validação de entrada
-- [ ] Implementar autenticação JWT
-- [ ] Adicionar middleware de autorização
-- [ ] Criar testes unitários e e2e
-- [ ] Implementar upload de arquivos
-- [ ] Adicionar logging estruturado
-- [ ] Configurar Docker para containerização
 
 ---
 
