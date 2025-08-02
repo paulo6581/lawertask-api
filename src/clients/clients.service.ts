@@ -2,6 +2,11 @@ import { Injectable, NotFoundException, ConflictException } from '@nestjs/common
 import { PrismaService } from '../database/prisma.service';
 import { CreateClientDto } from './dto/create-client.dto';
 
+interface PrismaError {
+  code: string;
+  message: string;
+}
+
 @Injectable()
 export class ClientsService {
   constructor(private prisma: PrismaService) {}
@@ -12,8 +17,9 @@ export class ClientsService {
       return await this.prisma.client.create({
         data: createClientDto,
       });
-    } catch (error) {
-      if (error?.code === 'P2002') {
+    } catch (error: unknown) {
+      const prismaError = error as PrismaError;
+      if (prismaError && prismaError.code === 'P2002') {
         throw new ConflictException('Email já está em uso');
       }
       throw error;
@@ -53,8 +59,9 @@ export class ClientsService {
         where: { id: parseInt(id) },
         data: updateClientDto,
       });
-    } catch (error) {
-      if (error?.code === 'P2002') {
+    } catch (error: unknown) {
+      const prismaError = error as PrismaError;
+      if (prismaError && prismaError.code === 'P2002') {
         throw new ConflictException('Email já está em uso');
       }
       throw error;

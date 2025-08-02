@@ -40,4 +40,5 @@ async function bootstrap() {
     console.error(`Erro ao inicializar a aplicação: ${error}`);
   }
 }
-bootstrap();
+
+void bootstrap();
